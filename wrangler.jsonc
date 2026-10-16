@@ -1,0 +1,11 @@
+// Deploy no Cloudflare como site estático (só assets, sem SSR).
+// Sem este arquivo, o `wrangler deploy` tenta autoconfigurar o projeto rodando
+// `astro add cloudflare` e o build quebra no prerender.
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "duchan",
+  "compatibility_date": "2026-10-01",
+  "assets": {
+    "directory": "./dist"
+  }
+}
