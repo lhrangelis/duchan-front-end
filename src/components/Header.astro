@@ -1,0 +1,56 @@
+---
+import { Image } from 'astro:assets';
+import logo from '../assets/logo.webp';
+import { site } from '../data/site';
+import { waLink } from '../lib/whatsapp';
+import Icon from './Icon.astro';
+
+const links = [
+  { href: '#servicos', label: 'Serviços' },
+  { href: '#insulfilme', label: 'Insulfilme' },
+  { href: '#como-funciona', label: 'Como funciona' },
+  { href: '#visite', label: 'Horários e contato' },
+  { href: '#localizacao', label: 'Como chegar' },
+];
+---
+
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="#inicio" aria-label={`${site.name}, início`}>
+      <Image class="brand-logo" src={logo} alt="" width={48} height={48} densities={[1, 2]} loading="eager" />
+      <span class="brand-name"><b>{site.shortName.toUpperCase()}</b><span>{site.tagline}</span></span>
+    </a>
+    <nav class="nav" aria-label="Seções">
+      {links.map((l) => <a href={l.href}>{l.label}</a>)}
+    </nav>
+    <a class="btn btn-amber" href={waLink()} target="_blank" rel="noopener">
+      <Icon name="whatsapp" />
+      <span>Pedir orçamento</span>
+    </a>
+  </div>
+</header>
+
+<style>
+  .top {
+    position: sticky; top: 0; z-index: 50;
+    background: color-mix(in srgb, var(--night) 92%, transparent);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--night-line);
+    color: var(--night-ink);
+  }
+  .wrap { display: flex; align-items: center; justify-content: space-between; gap: 20px; padding-block: 14px; }
+  .brand { display: flex; align-items: center; gap: 12px; text-decoration: none; min-width: 0; }
+  .brand :global(.brand-logo) {
+    width: 48px; height: 48px; border-radius: 50%; flex: none; display: block;
+    box-shadow: 0 0 0 1px var(--night-line), 0 0 18px rgba(247, 191, 0, .18);
+  }
+  .brand-name { display: flex; flex-direction: column; line-height: 1; }
+  .brand-name b { font: 800 18px/1 var(--f-display); font-stretch: 118%; letter-spacing: .02em; }
+  .brand-name span { font: 500 10px/1 var(--f-mono); letter-spacing: .32em; color: var(--night-muted); margin-top: 5px; }
+  .nav { display: flex; gap: 28px; font-size: 14px; }
+  .nav a { text-decoration: none; color: var(--night-muted); transition: color .15s; }
+  .nav a:hover { color: var(--night-ink); }
+  .btn { padding: 11px 16px; font-size: 14px; }
+  @media (max-width: 880px) { .nav { display: none; } }
+  @media (max-width: 440px) { .btn span { display: none; } .btn { padding: 11px; } }
+</style>

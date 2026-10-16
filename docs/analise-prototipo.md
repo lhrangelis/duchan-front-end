@@ -103,7 +103,7 @@ Por que é a melhor escolha para este projeto:
 
 | Camada | Escolha | Observação |
 |--------|---------|------------|
-| Framework | Astro 5 (saída estática) | Sem servidor, custo zero de hospedagem |
+| Framework | Astro 7 (saída estática) | Sem servidor, custo zero de hospedagem |
 | Linguagem | TypeScript | Tipar `site.ts` evita erros de horário e telefone |
 | Estilo | CSS puro + custom properties (tokens atuais) | Escopado por componente |
 | Interatividade | TS vanilla em `<script>` do Astro | Preact só se o simulador crescer muito |

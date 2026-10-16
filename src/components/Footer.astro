@@ -1,0 +1,26 @@
+---
+import { Image } from 'astro:assets';
+import logo from '../assets/logo.webp';
+import { site } from '../data/site';
+---
+
+<footer>
+  <div class="wrap">
+    <span class="id">
+      <Image src={logo} alt="" width={44} height={44} densities={[1, 2]} />
+      <span>© {new Date().getFullYear()} {site.name}<br />{site.address.street} – {site.address.district}, {site.address.city} – {site.address.state}</span>
+    </span>
+    <span>
+      <a href={site.social.instagram.url} target="_blank" rel="noopener">Instagram</a> ·
+      <a href={site.social.facebook.url} target="_blank" rel="noopener">Facebook</a>
+    </span>
+  </div>
+</footer>
+
+<style>
+  footer { background: var(--night); color: var(--night-muted); font-size: 14px; }
+  .wrap { display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; padding-block: 28px; }
+  .id { display: flex; align-items: center; gap: 14px; }
+  .id :global(img) { border-radius: 50%; flex: none; }
+  a { color: var(--night-ink); text-decoration: none; }
+</style>

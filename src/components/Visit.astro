@@ -1,0 +1,93 @@
+---
+import { site, type Weekday } from '../data/site';
+import { WEEKDAY_NAMES, hoursSummary } from '../lib/hours';
+import { waLink } from '../lib/whatsapp';
+import Icon from './Icon.astro';
+
+const order: Weekday[] = [1, 2, 3, 4, 5, 6, 0];
+const days = order.map((d) => ({ d, name: WEEKDAY_NAMES[d], hours: site.hours[d] }));
+const weekend = !site.hours[6] && !site.hours[0];
+
+const contacts = [
+  { href: waLink(null), icon: 'phone', label: 'Telefone e WhatsApp', value: site.phone.display },
+  { href: site.social.instagram.url, icon: 'instagram', label: 'Instagram', value: site.social.instagram.handle },
+  { href: site.social.facebook.url, icon: 'facebook', label: 'Facebook', value: site.social.facebook.label },
+] as const;
+---
+
+<section class="block flush-top" id="visite">
+  <div class="wrap">
+    <div class="head">
+      <div>
+        <p class="eyebrow">Horários e contato</p>
+        <h2>Fale com a {site.shortName}</h2>
+      </div>
+      <p>Atendimento presencial e pelo WhatsApp durante o horário da loja.{weekend && ' Fins de semana fechado.'}</p>
+    </div>
+    <div class="visit">
+      <div class="card">
+        <h3>Horário de funcionamento <span class="pill" data-status="short">{hoursSummary(site.hours).split(',')[0]}</span></h3>
+        <table class="hours">
+          <caption class="sr-only">Horário de funcionamento por dia da semana</caption>
+          <tbody>
+            {days.map(({ d, name, hours }) => (
+              <tr data-weekday={d} class:list={{ closed: !hours }}>
+                <th scope="row">{name}</th>
+                <td>{hours ? `${hours.open} – ${hours.close}` : 'Fechado'}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <div class="card">
+        <h3>Contato</h3>
+        <div class="contact">
+          {contacts.map((c) => (
+            <a href={c.href} target="_blank" rel="noopener">
+              <span class="ci"><Icon name={c.icon} /></span>
+              <span class="txt"><small>{c.label}</small><strong>{c.value}</strong></span>
+              <span class="arr" aria-hidden="true">→</span>
+            </a>
+          ))}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  import '../scripts/store-status';
+</script>
+
+<style>
+  .visit { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+  .card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); padding: 28px; min-width: 0; }
+  h3 { font-size: 20px; font-weight: 750; font-stretch: 108%; text-transform: uppercase; margin-bottom: 18px; display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
+  .pill { font: 500 12px/1 var(--f-mono); letter-spacing: .06em; text-transform: none; padding: 7px 10px; border-radius: 999px; border: 1px solid var(--line); color: var(--muted); }
+  .pill.is-open { color: var(--ok); border-color: currentColor; }
+  .pill.is-closed { color: var(--off); border-color: currentColor; }
+
+  .hours { width: 100%; border-collapse: collapse; font-size: 15px; }
+  .hours th, .hours td { padding: 11px 0; border-top: 1px solid var(--line); }
+  .hours th { text-align: left; font-weight: 400; }
+  .hours tr:first-child > * { border-top: 0; }
+  .hours td { text-align: right; font-family: var(--f-mono); font-size: 14px; font-variant-numeric: tabular-nums; }
+  .hours tr.closed > * { color: var(--muted); }
+  .hours tr.today > * { font-weight: 600; }
+  .hours tr.today th::after {
+    content: "hoje"; font: 500 10px/1 var(--f-mono); letter-spacing: .1em; text-transform: uppercase;
+    margin-left: 10px; padding: 4px 6px; border-radius: 4px; background: var(--amber); color: var(--on-amber); vertical-align: 2px;
+  }
+
+  .contact { display: flex; flex-direction: column; }
+  .contact a { display: flex; align-items: center; gap: 16px; padding: 16px 0; border-top: 1px solid var(--line); text-decoration: none; }
+  .contact a:first-child { border-top: 0; padding-top: 0; }
+  .ci { width: 42px; height: 42px; border-radius: 10px; border: 1px solid var(--line); display: grid; place-items: center; flex: none; }
+  .ci :global(svg) { width: 20px; height: 20px; }
+  .txt { min-width: 0; }
+  small { display: block; font: 500 11px/1.2 var(--f-mono); letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+  strong { font-size: 17px; font-weight: 600; overflow-wrap: anywhere; }
+  .arr { margin-left: auto; color: var(--muted); transition: transform .15s; }
+  .contact a:hover .arr { transform: translateX(3px); color: var(--ink); }
+  @media (max-width: 820px) { .visit { grid-template-columns: 1fr; } }
+</style>

@@ -1,0 +1,42 @@
+---
+import { site } from '../data/site';
+import { hoursSummary } from '../lib/hours';
+
+const steps = [
+  { title: 'Orçamento', text: 'Mande modelo e ano do carro pelo WhatsApp e diga o que quer instalar.' },
+  { title: 'Agendamento', text: `Escolha o dia. Atendemos: ${hoursSummary(site.hours).toLowerCase()}.` },
+  { title: 'Instalação', text: 'Serviço feito na loja, com cuidado com o acabamento interno e a parte elétrica.' },
+  { title: 'Entrega', text: 'Testamos tudo com você e explicamos o uso de cada item instalado.' },
+];
+---
+
+<section class="block" id="como-funciona">
+  <div class="wrap">
+    <div class="head">
+      <div>
+        <p class="eyebrow">Como funciona</p>
+        <h2>Do orçamento à entrega</h2>
+      </div>
+      <p>Sem fila e sem surpresa no valor. Você combina tudo antes e sabe quando o carro fica pronto.</p>
+    </div>
+    <ol class="steps">
+      {steps.map((s, i) => (
+        <li class="step">
+          <b>PASSO {i + 1}</b>
+          <h3>{s.title}</h3>
+          <p>{s.text}</p>
+        </li>
+      ))}
+    </ol>
+  </div>
+</section>
+
+<style>
+  .steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; list-style: none; margin: 0; padding: 0; }
+  .step { display: flex; flex-direction: column; gap: 10px; padding-top: 18px; border-top: 2px solid var(--ink); min-width: 0; }
+  .step b { font: 500 12px/1 var(--f-mono); letter-spacing: .12em; color: var(--amber-ink); }
+  .step h3 { font-size: 19px; font-weight: 750; font-stretch: 106%; text-transform: uppercase; }
+  .step p { margin: 0; color: var(--muted); font-size: 15px; }
+  @media (max-width: 900px) { .steps { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 520px) { .steps { grid-template-columns: 1fr; } }
+</style>

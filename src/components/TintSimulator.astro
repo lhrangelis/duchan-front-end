@@ -1,0 +1,121 @@
+---
+import { site } from '../data/site';
+
+const initial = site.films.find((f) => f.value === site.defaultFilm) ?? site.films[0];
+---
+
+<section class="block tint" id="insulfilme">
+  <div class="wrap">
+    <div class="head">
+      <div>
+        <p class="eyebrow">Simulador de insulfilme</p>
+        <h2>Veja a diferença entre cada película</h2>
+      </div>
+      <p>O número da película indica quanto de luz passa pelo vidro. Quanto menor o número, mais escuro e mais privacidade. Toque nas opções para comparar.</p>
+    </div>
+
+    <div class="sim" data-tint-sim>
+      <div class="view">
+        <svg viewBox="0 0 640 400" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+          <defs>
+            <linearGradient id="tint-sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7FB2D6" /><stop offset="1" stop-color="#D9E8EF" /></linearGradient>
+          </defs>
+          <rect width="640" height="400" fill="url(#tint-sky)" />
+          <circle cx="520" cy="90" r="34" fill="#FFF6D8" />
+          <path d="M0 270 L60 250 L140 262 L230 240 L330 258 L420 236 L520 254 L640 238 L640 400 L0 400Z" fill="#8FA88A" />
+          <g fill="#5C6E66">
+            <rect x="40" y="170" width="60" height="110" /><rect x="110" y="200" width="44" height="80" /><rect x="400" y="160" width="70" height="120" /><rect x="480" y="190" width="50" height="90" />
+          </g>
+          <g fill="#B9C9CF" opacity=".8">
+            <rect x="52" y="184" width="10" height="12" /><rect x="76" y="184" width="10" height="12" /><rect x="52" y="210" width="10" height="12" /><rect x="76" y="210" width="10" height="12" />
+            <rect x="414" y="176" width="10" height="12" /><rect x="440" y="176" width="10" height="12" /><rect x="414" y="202" width="10" height="12" /><rect x="440" y="202" width="10" height="12" />
+          </g>
+          <path d="M0 300 L640 290 L640 400 L0 400Z" fill="#4E5458" />
+          <path d="M0 340 L640 334" stroke="#E9E3C8" stroke-width="4" stroke-dasharray="40 30" />
+          <circle cx="250" cy="250" r="36" fill="#6E8F63" /><rect x="246" y="270" width="8" height="34" fill="#4B3E31" />
+          <rect class="film" data-film width="640" height="400" fill="#07090B" opacity={initial.opacity} />
+          <path d="M0 0 H640 V400 H0Z M26 30 Q30 22 40 22 H600 Q616 22 616 38 V372 Q616 380 606 380 H40 Q26 380 26 366Z" fill="#14181C" fill-rule="evenodd" />
+        </svg>
+        <span class="tag" data-tag>PELÍCULA G{initial.value}</span>
+      </div>
+
+      <div class="panel">
+        <div class="chips" role="group" aria-label="Escolha a película">
+          {site.films.map((f) => (
+            <button type="button" class="chip" data-value={f.value} aria-pressed={f.value === initial.value ? 'true' : 'false'}>G{f.value}</button>
+          ))}
+        </div>
+        <div class="readout" aria-live="polite">
+          <div>
+            <small id="tint-vlt-label">Luz que passa</small>
+            <strong data-vlt>{initial.value}%</strong>
+            <div class="meter" role="meter" aria-labelledby="tint-vlt-label" aria-valuemin="0" aria-valuemax="100" aria-valuenow={initial.value} data-vlt-meter>
+              <span style={`width:${initial.value}%`}></span>
+            </div>
+          </div>
+          <div>
+            <small id="tint-priv-label">Privacidade</small>
+            <strong data-priv>{initial.privacyLabel}</strong>
+            <div class="meter" role="meter" aria-labelledby="tint-priv-label" aria-valuemin="0" aria-valuemax="100" aria-valuenow={initial.privacy} data-priv-meter>
+              <span style={`width:${initial.privacy}%`}></span>
+            </div>
+          </div>
+        </div>
+        <p class="note" data-desc aria-live="polite">{initial.description}</p>
+        <p class="note">Para-brisa e vidros laterais dianteiros têm limite mínimo de transparência definido pelo CONTRAN. Indicamos a película certa para cada vidro do seu carro.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  import { site } from '../data/site';
+
+  for (const root of document.querySelectorAll<HTMLElement>('[data-tint-sim]')) {
+    const $ = <T extends Element = HTMLElement>(sel: string) => root.querySelector<T>(sel)!;
+    const chips = root.querySelectorAll<HTMLButtonElement>('.chip');
+    const setMeter = (meter: HTMLElement, value: number) => {
+      meter.setAttribute('aria-valuenow', String(value));
+      meter.querySelector<HTMLElement>('span')!.style.width = `${value}%`;
+    };
+
+    for (const chip of chips) {
+      chip.addEventListener('click', () => {
+        const film = site.films.find((f) => f.value === Number(chip.dataset.value));
+        if (!film) return;
+        for (const c of chips) c.setAttribute('aria-pressed', String(c === chip));
+        $<SVGRectElement>('[data-film]').style.opacity = String(film.opacity);
+        $('[data-vlt]').textContent = `${film.value}%`;
+        $('[data-priv]').textContent = film.privacyLabel;
+        setMeter($('[data-vlt-meter]'), film.value);
+        setMeter($('[data-priv-meter]'), film.privacy);
+        $('[data-desc]').textContent = film.description;
+        $('[data-tag]').textContent = `PELÍCULA G${film.value}`;
+      });
+    }
+  }
+</script>
+
+<style>
+  .tint { background: var(--night); color: var(--night-ink); }
+  .tint .eyebrow { color: var(--amber); }
+  .tint .head > p { color: var(--night-muted); }
+  .sim { display: grid; grid-template-columns: 1.3fr 1fr; gap: 40px; align-items: center; }
+  .view { position: relative; border-radius: 14px; overflow: hidden; border: 1px solid var(--night-line); aspect-ratio: 16 / 10; max-width: 100%; background: #9EC3DA; }
+  .view svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .film { transition: opacity .45s ease; }
+  .tag { position: absolute; left: 16px; bottom: 16px; font: 500 12px/1 var(--f-mono); letter-spacing: .1em; background: rgba(14, 17, 20, .75); color: #ECEEEF; padding: 8px 10px; border-radius: 6px; }
+  .panel { display: flex; flex-direction: column; gap: 22px; min-width: 0; }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chip { font: 600 14px/1 var(--f-mono); padding: 12px 16px; border-radius: 8px; border: 1px solid var(--night-line); background: var(--night-2); color: var(--night-ink); cursor: pointer; transition: border-color .15s, background .15s; }
+  .chip:hover { border-color: var(--night-muted); }
+  .chip[aria-pressed="true"] { background: var(--amber); border-color: var(--amber); color: var(--on-amber); }
+  .readout { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1px; background: var(--night-line); border: 1px solid var(--night-line); border-radius: 10px; overflow: hidden; }
+  .readout > div { background: var(--night); padding: 16px; display: flex; flex-direction: column; gap: 6px; }
+  .readout small { font: 500 11px/1 var(--f-mono); letter-spacing: .12em; text-transform: uppercase; color: var(--night-muted); }
+  .readout strong { font: 800 30px/1 var(--f-display); font-stretch: 110%; font-variant-numeric: tabular-nums; }
+  .meter { height: 6px; border-radius: 3px; background: var(--night-line); overflow: hidden; }
+  .meter span { display: block; height: 100%; background: var(--amber); transition: width .45s ease; }
+  .note { font-size: 14px; color: var(--night-muted); margin: 0; border-left: 2px solid var(--amber); padding-left: 14px; }
+  @media (max-width: 880px) { .sim { grid-template-columns: 1fr; } }
+</style>

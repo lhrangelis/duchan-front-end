@@ -1,0 +1,21 @@
+---
+import { waLink } from '../lib/whatsapp';
+import Icon from './Icon.astro';
+---
+
+<a class="fab" href={waLink()} target="_blank" rel="noopener" aria-label="Conversar no WhatsApp">
+  <Icon name="whatsapp" />
+</a>
+
+<style>
+  .fab {
+    position: fixed; right: 20px; bottom: 20px; z-index: 40;
+    width: 56px; height: 56px; border-radius: 50%;
+    background: var(--whatsapp); color: #fff;
+    display: grid; place-items: center;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, .25);
+    transition: transform .15s;
+  }
+  .fab:hover { transform: scale(1.06); }
+  .fab :global(svg) { width: 28px; height: 28px; }
+</style>
