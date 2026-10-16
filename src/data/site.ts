@@ -54,7 +54,14 @@ export const site = {
     state: 'SP',
     postalCode: '17250-037',
     country: 'BR',
-    // TODO: adicionar `geo: { lat, lng }` com as coordenadas exatas do Google Business (entra no JSON-LD).
+    geo: { lat: -22.0689334, lng: -48.7303207 },
+  },
+
+  /** Ficha da loja no Google Maps (links e mapa abrem nela, não só no endereço). */
+  googleMaps: {
+    name: 'DUCHAN SOUND CAR',
+    placeId: 'ChIJ2aLqc8u0uJQR7vVkUCtMUGM',
+    cid: '7156303556807816686',
   },
 
   social: {

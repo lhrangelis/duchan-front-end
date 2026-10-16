@@ -43,6 +43,8 @@ const jsonLd = {
     postalCode: site.address.postalCode,
     addressCountry: site.address.country,
   },
+  geo: { '@type': 'GeoCoordinates', latitude: site.address.geo.lat, longitude: site.address.geo.lng },
+  hasMap: `https://maps.google.com/?cid=${site.googleMaps.cid}`,
   openingHoursSpecification,
   sameAs: [site.social.instagram.url, site.social.facebook.url],
   areaServed: site.address.city,

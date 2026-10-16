@@ -48,5 +48,4 @@ Os pontos marcados com `TODO` no código:
 - Confirmar com o cliente o link do Facebook (`MartelinhoDeOuroSoundCar`).
 - Confirmar os feriados em que a loja fecha (`closedDates`).
 - Validar os textos do simulador com base na Resolução CONTRAN 960/2022.
-- Coordenadas da loja (`geo`) para o JSON-LD.
 - Trocar `public/og.jpg` por uma foto real quando houver.
